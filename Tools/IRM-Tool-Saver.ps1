@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     IRM / Command Tool Saver - Separate Installed Tools Version
 
@@ -9,7 +9,7 @@
     This keeps installed IRM tools separate from normal custom tools.
 #>
 
-$SuitePath = "C:\Users\ARCHEIDIES\Downloads\Windows_Maintenance_Toolkit\MaintenanceSuite"
+$SuitePath = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $ToolsFolder = Join-Path $SuitePath "Tools"
 $InstalledIRMFolder = Join-Path $ToolsFolder "Installed-IRM-Tools"
 
@@ -35,8 +35,8 @@ Write-Host ""
 Write-Host "New IRM tools will be saved separately here:" -ForegroundColor Yellow
 Write-Host $InstalledIRMFolder -ForegroundColor White
 Write-Host ""
-Write-Host "They will show under:" -ForegroundColor Yellow
-Write-Host "[19] Installed IRM Tools" -ForegroundColor White
+Write-Host "They will show under the GUI tab:" -ForegroundColor Yellow
+Write-Host "Installed IRM Tools" -ForegroundColor White
 Write-Host ""
 
 Write-Host "Example IRM command:" -ForegroundColor Yellow
@@ -125,11 +125,9 @@ if (`$Confirm -ne "Y" -and `$Confirm -ne "y") {
 
 try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
     Write-Host ""
     Write-Host "Running command..." -ForegroundColor Green
     Write-Host ""
-
     `$SavedCommand = '$EscapedCommand'
     Invoke-Expression `$SavedCommand
 }
@@ -144,7 +142,6 @@ pause
 
 try {
     $NewToolScript | Out-File -FilePath $ToolPath -Encoding utf8 -Force
-
     Write-Host ""
     Write-Host "============================================================" -ForegroundColor Green
     Write-Host " INSTALLED IRM TOOL SAVED SUCCESSFULLY" -ForegroundColor Green
@@ -153,10 +150,7 @@ try {
     Write-Host "Saved as:" -ForegroundColor Yellow
     Write-Host $ToolPath -ForegroundColor White
     Write-Host ""
-    Write-Host "To run it:" -ForegroundColor Yellow
-    Write-Host "1. Go back to the main menu." -ForegroundColor White
-    Write-Host "2. Open [19] Installed IRM Tools." -ForegroundColor White
-    Write-Host ""
+    Write-Host "Open the GUI and go to Installed IRM Tools." -ForegroundColor Yellow
 }
 catch {
     Write-Host ""
