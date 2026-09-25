@@ -1,9 +1,9 @@
 @echo off
-title Upload Windows Maintenance Toolkit to GitHub
+title Fix GitHub Push and Upload Toolkit
 color 0A
 
 echo ============================================================
-echo  Uploading Windows Maintenance Toolkit to GitHub
+echo  Fixing GitHub push rejection and uploading toolkit
 echo ============================================================
 echo.
 
@@ -16,19 +16,9 @@ echo.
 echo Checking Git...
 git --version
 if errorlevel 1 (
-    echo.
-    echo Git is still not detected.
-    echo Close this window, open a new CMD, and try again.
-    echo If it still fails, reinstall Git and select:
-    echo "Git from the command line and also from 3rd-party software"
+    echo Git is not detected.
     pause
     exit /b
-)
-
-echo.
-echo Initializing Git repo if needed...
-if not exist ".git" (
-    git init
 )
 
 echo.
@@ -37,23 +27,24 @@ git config user.name "T3ND41"
 git config user.email "T3ND41@users.noreply.github.com"
 
 echo.
-echo Setting branch to main...
+echo Making sure branch is main...
 git branch -M main
 
 echo.
-echo Removing old remote if it exists...
+echo Making sure remote is correct...
 git remote remove origin 2>nul
-
-echo.
-echo Adding GitHub remote...
 git remote add origin https://github.com/T3ND41/windows-maintenance-toolkit.git
 
 echo.
-echo Adding all files...
+echo Pulling existing GitHub files first...
+git pull origin main --allow-unrelated-histories --no-rebase
+
+echo.
+echo Adding toolkit files...
 git add .
 
 echo.
-echo Committing files...
+echo Committing changes...
 git commit -m "Upload Windows Maintenance Toolkit"
 
 echo.
@@ -62,8 +53,8 @@ git push -u origin main
 
 echo.
 echo ============================================================
-echo  Upload complete.
-echo  Now check your GitHub repo:
+echo  Finished.
+echo  Now check:
 echo  https://github.com/T3ND41/windows-maintenance-toolkit
 echo ============================================================
 pause
