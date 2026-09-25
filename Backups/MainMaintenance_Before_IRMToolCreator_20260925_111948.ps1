@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Modular Windows Maintenance Toolkit
 .DESCRIPTION
@@ -631,100 +631,6 @@ function Show-CustomTools {
 # MAIN MENU
 # =========================
 
-
-# =========================
-# INSTALLED IRM TOOLS MENU
-# =========================
-
-function Show-InstalledIRMTools {
-    $InstalledIRMFolder = Join-Path $ToolsFolder "Installed-IRM-Tools"
-
-    if (-not (Test-Path $InstalledIRMFolder)) {
-        New-Item -ItemType Directory -Path $InstalledIRMFolder -Force | Out-Null
-    }
-
-    while ($true) {
-        Clear-Host
-        Write-Host "==================================================" -ForegroundColor Cyan
-        Write-Host " INSTALLED IRM TOOLS" -ForegroundColor Cyan
-        Write-Host "==================================================" -ForegroundColor Cyan
-        Write-Host ""
-        Write-Host "These are tools saved using IRM-Tool-Saver." -ForegroundColor Yellow
-        Write-Host "Folder: $InstalledIRMFolder" -ForegroundColor Gray
-        Write-Host ""
-
-        $InstalledTools = Get-ChildItem -Path $InstalledIRMFolder -Filter "*.ps1" -File -ErrorAction SilentlyContinue
-
-        if (-not $InstalledTools -or $InstalledTools.Count -eq 0) {
-            Write-Host "No installed IRM tools found yet." -ForegroundColor Yellow
-            Write-Host ""
-            Write-Host "To add one:" -ForegroundColor White
-            Write-Host "1. Go to [14] Custom Tools." -ForegroundColor White
-            Write-Host "2. Run IRM-Tool-Saver." -ForegroundColor White
-            Write-Host "3. Paste your IRM command and save it." -ForegroundColor White
-            Write-Host ""
-            Write-Host "[Q] Back"
-            $EmptyChoice = Read-Host "Select option"
-            if ($EmptyChoice -eq "Q" -or $EmptyChoice -eq "q") {
-                return
-            }
-            continue
-        }
-
-        $Map = @{}
-        $Index = 1
-
-        foreach ($Tool in $InstalledTools) {
-            Write-Host "[$Index] $($Tool.BaseName)"
-            $Map[$Index] = $Tool.FullName
-            $Index++
-        }
-
-        Write-Host ""
-        Write-Host "[O] Open Installed IRM Tools Folder"
-        Write-Host "[Q] Back"
-        Write-Host ""
-
-        $Choice = Read-Host "Select installed IRM tool"
-
-        if ($Choice -eq "Q" -or $Choice -eq "q") {
-            return
-        }
-
-        if ($Choice -eq "O" -or $Choice -eq "o") {
-            Invoke-Item $InstalledIRMFolder
-            continue
-        }
-
-        $Number = 0
-
-        if ([int]::TryParse($Choice, [ref]$Number)) {
-            if ($Map.ContainsKey($Number)) {
-                $SelectedTool = $Map[$Number]
-
-                if (Get-Command Invoke-MaintenanceCommand -ErrorAction SilentlyContinue) {
-                    Invoke-MaintenanceCommand -TaskName "Installed IRM Tool: $([System.IO.Path]::GetFileNameWithoutExtension($SelectedTool))" -CommandBlock {
-                        & $SelectedTool
-                    }
-                }
-                else {
-                    & $SelectedTool
-                }
-
-                Pause-Tool
-            }
-            else {
-                Write-Host "Invalid selection." -ForegroundColor Red
-                Start-Sleep -Seconds 1
-            }
-        }
-        else {
-            Write-Host "Invalid selection." -ForegroundColor Red
-            Start-Sleep -Seconds 1
-        }
-    }
-}
-
 function Show-MainMenu {
     Write-Log "=== Maintenance Session Started ===" "INFO" Green
 
@@ -769,7 +675,6 @@ function Show-MainMenu {
         Write-Host " [15] Check GitHub Updates"
         Write-Host " [16] Open Logs Folder"
         Write-Host " [17] Open Reports Folder"
-        Write-Host " [19] Installed IRM Tools"
         Write-Host " [Q] Exit"
 
         Write-Host ""
@@ -795,7 +700,6 @@ function Show-MainMenu {
             "15" { Sync-WithGitHub; Pause-Tool }
             "16" { Invoke-Item $LogsFolder }
             "17" { Invoke-Item $ReportsFolder }
-            "19" { Show-InstalledIRMTools }
             "Q"  {
                 Write-Log "=== Maintenance Session Ended ===" "INFO" Green
                 exit
@@ -813,5 +717,3 @@ function Show-MainMenu {
 # =========================
 
 Show-MainMenu
-
-
