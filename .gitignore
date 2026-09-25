@@ -1,0 +1,22 @@
+# Do not upload local logs, reports, and backups
+Logs/*
+Reports/*
+Backups/*
+
+# Keep folders if .gitkeep files exist
+!Logs/.gitkeep
+!Reports/.gitkeep
+!Backups/.gitkeep
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+
+# Windows noise
+Thumbs.db
+Desktop.ini
+
+# Optional local-only installer storage
+Installers/*
+!Installers/.gitkeep
