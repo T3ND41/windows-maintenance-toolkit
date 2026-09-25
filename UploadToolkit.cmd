@@ -17,8 +17,10 @@ echo Checking Git...
 git --version
 if errorlevel 1 (
     echo.
-    echo Git is not installed or not found.
-    echo Install Git for Windows first, then run this again.
+    echo Git is still not detected.
+    echo Close this window, open a new CMD, and try again.
+    echo If it still fails, reinstall Git and select:
+    echo "Git from the command line and also from 3rd-party software"
     pause
     exit /b
 )
@@ -30,6 +32,11 @@ if not exist ".git" (
 )
 
 echo.
+echo Setting Git identity...
+git config user.name "T3ND41"
+git config user.email "T3ND41@users.noreply.github.com"
+
+echo.
 echo Setting branch to main...
 git branch -M main
 
@@ -38,11 +45,11 @@ echo Removing old remote if it exists...
 git remote remove origin 2>nul
 
 echo.
-echo Adding correct GitHub remote...
+echo Adding GitHub remote...
 git remote add origin https://github.com/T3ND41/windows-maintenance-toolkit.git
 
 echo.
-echo Adding files...
+echo Adding all files...
 git add .
 
 echo.
@@ -55,6 +62,8 @@ git push -u origin main
 
 echo.
 echo ============================================================
-echo  Done. Now test option 15 in the toolkit again.
+echo  Upload complete.
+echo  Now check your GitHub repo:
+echo  https://github.com/T3ND41/windows-maintenance-toolkit
 echo ============================================================
 pause
